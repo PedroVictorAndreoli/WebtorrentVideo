@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './playerVideo.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress'; // Importa o indicador de carregamento
 import { styled } from '@mui/system';
 
 const CustomTextField = styled(TextField)({
@@ -26,8 +27,10 @@ const CustomTextField = styled(TextField)({
 
 function App() {
   const [magnetURI, setMagnetURI] = useState('');
+  const [loading, setLoading] = useState(false); // Adiciona estado de carregamento
 
   const handleSubmit = async () => {
+    setLoading(true); // Define o estado de carregamento como verdadeiro
     try {
       const response = await fetch('http://localhost:3000/add-magnet', {
         method: 'POST',
@@ -38,13 +41,16 @@ function App() {
       });
 
       if (response.ok) {
-        console.log('Magnet URI submitted successfully');
+        const data = await response.json();
+        console.log('Magnet URI submitted successfully', data);
         window.location.reload();
       } else {
         console.error('Failed to submit Magnet URI');
       }
     } catch (error) {
       console.error('Error submitting Magnet URI:', error);
+    } finally {
+      setLoading(false); // Define o estado de carregamento como falso
     }
   };
 
@@ -63,9 +69,13 @@ function App() {
             onChange={(e) => setMagnetURI(e.target.value)}
           />
         </div>
-        <Button variant="contained" color="success" size="small" onClick={handleSubmit}>
-          Submit
-        </Button>
+        {loading ? (
+          <CircularProgress color="success" />
+        ) : (
+          <Button variant="contained" color="success" size="small" onClick={handleSubmit}>
+            Submit
+          </Button>
+        )}
       </div>
       <video
         id="videoPlayer"

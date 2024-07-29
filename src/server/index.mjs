@@ -28,37 +28,43 @@ app.post('/add-magnet', (req, res) => {
 
         torrent.on('done', () => {
             console.log('Download concluído');
+
+            res.send({ message: 'Torrent adicionado com sucesso', infoHash: torrent.infoHash });
         });
 
         const file = torrent.files.find((file) => file.name.endsWith('.mkv'));
         if (file) {
             app.get('/video', (req, res) => {
                 const range = req.headers.range;
-                const positions = range.replace(/bytes=/, "").split("-");
-                const start = parseInt(positions[0], 10);
-                const end = positions[1] ? parseInt(positions[1], 10) : file.length - 1;
-                const chunksize = (end - start) + 1;
+                if (range) {
+                    const positions = range.replace(/bytes=/, "").split("-");
+                    const start = parseInt(positions[0], 10);
+                    const end = positions[1] ? parseInt(positions[1], 10) : file.length - 1;
+                    const chunksize = (end - start) + 1;
 
-                res.writeHead(206, {
-                    'Content-Range': 'bytes ' + start + '-' + end + '/' + file.length,
-                    'Accept-Ranges': 'bytes',
-                    'Content-Length': chunksize,
-                    'Content-Type': 'video/mp4'
-                });
+                    res.writeHead(206, {
+                        'Content-Range': 'bytes ' + start + '-' + end + '/' + file.length,
+                        'Accept-Ranges': 'bytes',
+                        'Content-Length': chunksize,
+                        'Content-Type': 'video/mp4'
+                    });
 
-                const stream = file.createReadStream({ start, end });
+                    const stream = file.createReadStream({ start, end });
 
-                stream.on('error', (err) => {
-                    console.error('Erro no stream:', err.message);
-                    res.status(500).end('Erro no servidor durante o streaming');
-                });
+                    stream.on('error', (err) => {
+                        console.error('Erro no stream:', err.message);
+                        res.status(500).end('Erro no servidor durante o streaming');
+                    });
 
-                req.on('close', () => {
-                    console.log('Conexão do cliente encerrada');
-                    stream.destroy();
-                });
+                    req.on('close', () => {
+                        console.log('Conexão do cliente encerrada');
+                        stream.destroy();
+                    });
 
-                stream.pipe(res);
+                    stream.pipe(res);
+                } else {
+                    res.status(416).send('Range header missing');
+                }
             });
         }
 
@@ -69,9 +75,8 @@ app.post('/add-magnet', (req, res) => {
 
     client.on('error', (err) => {
         console.error('Erro do cliente:', err.message);
+        res.status(500).send('Erro ao adicionar o torrent');
     });
-
-    res.send('Torrent adicionado com sucesso');
 });
 
 app.listen(port, () => {
