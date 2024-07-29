@@ -15,12 +15,16 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const client = new WebTorrent();
-
+let currentFile = null;
 
 app.post('/add-magnet', (req, res) => {
     const magnetURI = req.body.magnetURI;
     if (!magnetURI) {
         return res.status(400).send('magnetURI is required');
+    }
+
+    if (currentFile) {
+        currentFile = null;
     }
 
     client.add(magnetURI, (torrent) => {
@@ -32,8 +36,9 @@ app.post('/add-magnet', (req, res) => {
             res.send({ message: 'Torrent adicionado com sucesso', infoHash: torrent.infoHash });
         });
 
-        const file = torrent.files.find((file) => file.name.endsWith('.mkv'));
+        const file = torrent.files.find((file) => file.name.endsWith('.mp4'));
         if (file) {
+            currentFile = file;
             app.get('/video', (req, res) => {
                 const range = req.headers.range;
                 if (range) {
@@ -80,5 +85,5 @@ app.post('/add-magnet', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log('Servidor rodando em http://localhost:${port}');
 });
