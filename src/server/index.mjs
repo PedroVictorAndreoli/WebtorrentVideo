@@ -8,7 +8,7 @@ import cors from 'cors';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -85,5 +85,5 @@ app.post('/add-magnet', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log('Servidor rodando em http://localhost:${port}');
+    console.log(`Servidor rodando em http://localhost:${port}`);
 });

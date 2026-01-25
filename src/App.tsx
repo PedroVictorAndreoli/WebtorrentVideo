@@ -32,7 +32,8 @@ function App() {
   const handleSubmit = async () => {
     setLoading(true); // Define o estado de carregamento como verdadeiro
     try {
-      const response = await fetch('http://localhost:3000/add-magnet', {
+      const api = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${api}/add-magnet`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +85,7 @@ function App() {
         preload="auto"
         data-setup='{"playbackRates": [1, 1.5, 2] }'
       >
-        <source src="http://localhost:3000/video" type="video/mp4" />
+        <source src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/video`} type="video/mp4" />
         <p className="vjs-no-js">
           To view this video please enable JavaScript, and consider upgrading to a web browser that
           <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>

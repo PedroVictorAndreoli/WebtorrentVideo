@@ -18,7 +18,8 @@
     "express": "^4.19.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "streamx": "^2.18.0",
+    "streamx": "^2.18.0"
+    ,
     "webtorrent": "^2.4.0"
   },
   "devDependencies": {
