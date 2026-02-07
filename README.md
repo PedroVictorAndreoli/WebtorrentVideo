@@ -1,36 +1,69 @@
-# Usando este Projeto
+# WebTorrent Video Streaming
 
-## Pré-requisitos
+Stream videos in the browser using magnet links. This project delivers progressive playback of `.mp4` files with a React/Vite frontend and a Node/Express + WebTorrent backend that supports HTTP Range requests for instant playback.
 
-Para rodar o projeto, é necessário ter o Node.js instalado. Você pode baixá-lo [aqui](https://nodejs.org/pt).
+![Frontend running](https://github.com/user-attachments/assets/dbaf1e6a-b3c1-40d5-91ff-cde1e1dc7317)
 
-## Rodando o Front-end
+## Features
 
-1. Acesse a pasta raiz do projeto.
-2. Execute o comando:
-    ```sh
-    npm install
-    ```
-3. Em seguida, execute:
-    ```sh
-    npm run dev
-    ```
-4. O front-end estará rodando na porta 5173 por padrão.
+- Magnet link input and on-demand video playback
+- Progressive streaming with HTTP Range support
+- Simple, clean UI for quick testing
 
-![Front-end rodando](https://github.com/user-attachments/assets/dbaf1e6a-b3c1-40d5-91ff-cde1e1dc7317)
+## Tech Stack
 
-## Rodando o Back-end
+- Frontend: React, Vite, TypeScript, MUI
+- Backend: Node.js, Express, WebTorrent
 
-1. Ainda na pasta raiz do projeto, execute:
-    ```sh
-    node ./src/service/index.mjs
-    ```
-2. Sua aplicação estará rodando. Agora, é só inserir o magnet link do vídeo que deseja ver.
+## Prerequisites
 
-## Notas
+- Node.js (LTS recommended) — download at https://nodejs.org/
 
-- Inicialmente, o projeto só funciona com magnet links de arquivos `.mp4`. Caso queira trocar a extensão do arquivo, vá no arquivo `index.mjs` e altere para a extensão desejada.
-  
-  ![Alterar extensão](https://github.com/user-attachments/assets/907e6135-ac55-4c68-a9bd-299f0c09ded5)
+## Getting Started
 
-- Caso queira trocar o torrent do vídeo player, é necessário fechar e abrir o servidor back-end novamente.
+Install dependencies from the project root:
+
+```sh
+npm install
+```
+
+## Running the Frontend
+
+```sh
+npm run dev
+```
+
+The frontend runs at http://localhost:5173 by default.
+
+## Running the Backend
+
+```sh
+npm run start
+```
+
+The backend runs at http://localhost:3001 by default.
+
+## Usage
+
+1. Start the backend.
+2. Start the frontend.
+3. Paste a magnet link for an `.mp4` file and play the video.
+
+## Configuration
+
+### Change the supported file extension
+
+By default, the backend looks for `.mp4` files in the torrent. To change this, edit the extension in the backend file:
+
+![Change extension](https://github.com/user-attachments/assets/907e6135-ac55-4c68-a9bd-299f0c09ded5)
+
+## Notes
+
+- If you want to load a different torrent, restart the backend server.
+
+## Scripts
+
+- `npm run dev` — start the frontend
+- `npm run start` — start the backend
+- `npm run build` — build the frontend
+- `npm run preview` — preview the production build
